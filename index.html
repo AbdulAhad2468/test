@@ -23,12 +23,21 @@
                 right: 30px;
                 top: 30px;
                 bottom: 30px;
-                width: 400px;
+                width: max-content;
+                min-width: 360px;
+                max-width: 45vw;
                 height: calc(100% - 60px);
                 border-radius: 12px;
                 border: 1px solid #eee;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.08);
                 z-index: 40;
+            }
+            /* Desktop: limit swatches to 6 per row */
+            #desktopSofaSwatches, #desktopOttomanSwatches {
+                display: grid;
+                grid-template-columns: repeat(6, min-content);
+                gap: 0.5rem;
+                align-items: center;
             }
         }
 
@@ -80,7 +89,7 @@
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 z-20 md:hidden">
-                <div class="bg-white w-full pt-12 pb-12 px-8 flex flex-col items-center shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.05)] relative">
+                <div class="bg-white w-full pt-10 pb-16 px-8 flex flex-col items-center shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.05)] relative">
                     <button class="absolute top-4 right-8 text-gray-300 hover:text-black font-light text-lg">✕</button>
                     <div id="mobileSwatches" class="no-scrollbar flex gap-6 items-center overflow-x-auto w-full justify-start"></div>
                 </div>
@@ -271,7 +280,7 @@
 
             fabrics.forEach((f, i) => {
                 const mobBtn = document.createElement('button');
-                mobBtn.className = `w-10 h-10 rounded-full border border-transparent transition-all shrink-0 ${i === 0 ? 'mobile-swatch-active' : ''}`;
+                    mobBtn.className = `w-14 h-14 rounded-full border border-transparent transition-all shrink-0 ${i === 0 ? 'mobile-swatch-active' : ''}`;
                 mobBtn.style.backgroundColor = f.color;
                 mobBtn.onclick = () => {
                     document.querySelectorAll('#mobileSwatches button').forEach(b => b.classList.remove('mobile-swatch-active'));
