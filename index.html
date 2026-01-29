@@ -88,18 +88,17 @@
                 <div class="w-6 h-[1px] bg-black"></div>
             </div>
 
-            <div class="absolute bottom-0 left-0 right-0 z-20 md:hidden">
-                <div class="bg-white w-full pt-10 pb-100 px-8 flex flex-col items-center shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.05)] relative">
-                    <button class="absolute top-4 right-8 text-gray-300 hover:text-black font-light text-lg">✕</button>
+            <div class="absolute bottom-28 left-0 right-0 z-20 md:hidden">
+                <div class="bg-white w-full pt-10 pb-25 px-8 flex flex-col items-center shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.05)] relative">
+
                     <div id="mobileSwatches" class="no-scrollbar flex gap-6 items-center overflow-x-auto w-full justify-start"></div>
                 </div>
             </div>
         </div>
-
-        <aside id="config-panel" class="hidden md:flex  p-10 flex-col overflow-y-auto bg-white">
-            <button id="panelCloseBtn" class="absolute top-6 right-8 text-gray-300 hover:text-black font-light text-lg">✕</button>
-            <button id="colorEditorCloseBtn" onclick="closeColorEditors()" class="absolute items-center justify-center w-6 h-6 text-sm text-gray-400 hover:text-black rounded-full border border-transparent hover:border-gray-200">✕</button>
-                <button id="openColorEditorBtn" onclick="openColorEditors()" class="absolute hidden items-center justify-center w-max text-sm text-gray-700 bg-white border border-gray-200 rounded-md py-2  p-20x whitespace-nowrap">Edit</button>
+                            
+        <aside id="config-panel" class="hidden md:flex p-10 flex-col overflow-y-auto bg-white">
+            <button class="absolute top-6 right-8 text-gray-300 hover:text-black font-light text-lg">✕</button>
+            <button id="sofaInlineCloseBtn" onclick="closeSofaEditors()" class="absolute top-36 right-8 flex items-center justify-center w-6 h-6 text-sm text-gray-400 hover:text-black rounded-full border border-transparent hover:border-gray-200">✕</button>
             
             <header class="mb-3">
                 <h1 class="text-[13px] font-medium text-[#1a1a1a]">Mogensen 2333 Sofa 3 Seater</h1>
@@ -120,7 +119,7 @@
             <hr class="mb-5 opacity-50">
             
             <div class="mb-6">
-                <label class="text-[10px] font-bold uppercase tracking-wider block mb-2 text-gray-500">Sofa : <span class="inline-block mr-2 w-2 h-2 rounded-full bg-gray-300 align-middle"></span><span id="sofaLabel" class="font-normal normal-case text-gray-400 ml-1 align-middle">Cognac</span></label>
+                <label class="text-[10px] font-bold uppercase tracking-wider block mb-2 text-gray-500">Sofa : <span id="sofaLabel" class="font-normal normal-case text-gray-400 ml-1">Cognac</span></label>
                 <div class="flex flex-wrap gap-2 items-center" id="desktopSofaSwatches"></div>
             </div>
             
@@ -202,8 +201,6 @@
             controls.enableDamping = true;
 
             renderAllSwatches();
-            // align the color-close button under the panel close and show it
-            setTimeout(() => { try { alignColorClose(); } catch(e){} }, 50);
             
             const updateAndSync = (e) => {
                 document.getElementById('modelSelect').value = e.target.value;
@@ -298,54 +295,12 @@
             renderDesktopSwatches(desktopOttoman, true, ottomanExpanded);
         }
 
-        // Close desktop color editors (sofa + ottoman) and show an Edit button
-        window.closeColorEditors = function() {
+        // Hide sofa and ottoman swatches (called by the inline cross)
+        function closeSofaEditors() {
             const sofaSwatches = document.getElementById('desktopSofaSwatches');
             const ottSwatches = document.getElementById('desktopOttomanSwatches');
-            const openBtn = document.getElementById('openColorEditorBtn');
             if (sofaSwatches) sofaSwatches.style.display = 'none';
             if (ottSwatches) ottSwatches.style.display = 'none';
-            if (openBtn) { openBtn.style.display = 'block'; alignColorClose(); }
-            const btn = document.getElementById('colorEditorCloseBtn');
-            if (btn) btn.style.display = 'none';
-        }
-
-        // Re-open the desktop color editors
-        window.openColorEditors = function() {
-            const sofaSwatches = document.getElementById('desktopSofaSwatches');
-            const ottSwatches = document.getElementById('desktopOttomanSwatches');
-            if (sofaSwatches) sofaSwatches.style.display = '';
-            if (ottSwatches) ottSwatches.style.display = '';
-            const openBtn = document.getElementById('openColorEditorBtn');
-            if (openBtn) openBtn.style.display = 'none';
-            const btn = document.getElementById('colorEditorCloseBtn');
-            if (btn) { btn.style.display = 'flex'; alignColorClose(); }
-        }
-
-        // Align the color editor close button exactly under the panel close button and inline with the sofa label
-        function alignColorClose() {
-            const panel = document.getElementById('config-panel');
-            const panelClose = document.getElementById('panelCloseBtn');
-            const sofaLabel = document.getElementById('sofaLabel');
-            const btn = document.getElementById('colorEditorCloseBtn');
-            if (!panel || !panelClose || !sofaLabel || !btn) return;
-            const panelRect = panel.getBoundingClientRect();
-            const labelRect = sofaLabel.getBoundingClientRect();
-            // position left same as panelClose (relative to panel)
-            const left = panelClose.offsetLeft;
-            // position top aligned with the sofa label baseline/center
-            const top = (labelRect.top - panelRect.top) + (sofaLabel.offsetHeight / 2) - (btn.offsetHeight / 2);
-            btn.style.position = 'absolute';
-            btn.style.left = left + 'px';
-            btn.style.top = top + 'px';
-            btn.style.display = 'flex';
-            const openBtn = document.getElementById('openColorEditorBtn');
-            if (openBtn) {
-                openBtn.style.position = 'absolute';
-                openBtn.style.left = left + 'px';
-                // position open button slightly lower so it doesn't overlap the small close icon
-                openBtn.style.top = (top - 2) + 'px';
-            }
         }
 
         function applyColor(hex, isOttomanOnly) {
@@ -372,10 +327,10 @@
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
             scene.background = window.innerWidth < 768 ? new THREE.Color(0xf0f8f9) : new THREE.Color(0xffffff);
-            try { alignColorClose(); } catch(e){}
         });
 
         init();
     </script>
 </body>
 </html>
+
