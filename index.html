@@ -251,9 +251,10 @@
 
                 // if not expanded and there are more than 5 colors, add the + button as the last swatch
                 if (!expanded && fabrics.length > 5) {
+                    const hiddenCount = fabrics.length - 5;
                     const plusBtn = document.createElement('button');
                     plusBtn.className = `w-10 h-10 rounded-sm border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center text-[14px] font-bold text-gray-600 transition-all swatch-btn plus-btn`;
-                    plusBtn.innerText = '+';
+                    plusBtn.innerText = `+${hiddenCount}`;
                     plusBtn.onclick = (e) => {
                         e.preventDefault();
                         if (isOttoman) {
